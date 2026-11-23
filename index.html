@@ -11,6 +11,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css?v=1">
 <style>
+/* MAISON DU LOGO FLOUTÉE EN ARRIÈRE-PLAN
+   blur : 26px = flou (plus grand = plus flou)
+   opacity : .38 = visibilité (0 = invisible, 1 = nette)  */
+.hero::before{content:"";position:absolute;right:-6%;top:50%;width:min(680px,70vw);aspect-ratio:128/152;transform:translateY(-50%);background:url(/images/favicon.png.png) center/contain no-repeat;filter:blur(26px);opacity:.38;pointer-events:none;z-index:0}
+@media(max-width:900px){.hero::before{right:50%;top:64%;width:min(460px,92vw);transform:translate(50%,-50%)}}
+
 .prod{position:relative;cursor:pointer;transition:border-color .25s}
 .prod:hover{border-color:rgba(109,189,37,.5)}
 .prod .t{padding-right:68px}
