@@ -9,6 +9,23 @@
 <link rel="canonical" href="https://hometechsolutions237.com/">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css?v=1">
+<style>
+.prod{position:relative;cursor:pointer;transition:border-color .25s}
+.prod:hover{border-color:rgba(109,189,37,.5)}
+.prod .t{padding-right:68px}
+.plus{position:absolute;right:14px;bottom:14px;width:40px;height:40px;border-radius:50%;border:0;background:var(--green);color:var(--deep);font:500 1.7rem/1 Inter,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;padding-bottom:3px}
+dialog.pm{border:1px solid rgba(109,189,37,.35);border-radius:28px;background:var(--panel);color:#fff;padding:0;width:min(520px,calc(100% - 32px));max-height:calc(100dvh - 32px);overflow:auto;margin:auto}
+dialog.pm::backdrop{background:rgba(0,10,20,.75);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.pm .pic{aspect-ratio:4/3}
+.pm .body{padding:26px 26px 28px}
+.pm small{color:var(--green);font-weight:600;font-size:.8rem}
+.pm h3{font-size:1.7rem;margin:4px 0 10px}
+.pm p{color:var(--mut)}
+.pm .price{font:700 1.5rem 'Bricolage Grotesque',sans-serif;margin:20px 0}
+.pm .acts{display:flex;flex-direction:column;gap:10px}
+.pm .acts .btn{text-align:center}
+.pm .close{position:absolute;top:12px;right:12px;width:42px;height:42px;border-radius:50%;border:0;background:rgba(0,16,31,.75);color:#fff;font-size:1.2rem;cursor:pointer}
+</style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"HomeTech Solutions","url":"https://hometechsolutions237.com/","telephone":"+237620208747","email":"hometechsolution37@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Yaoundé","addressCountry":"CM"},"areaServed":"Cameroun"}</script>
 </head>
 <body>
@@ -72,14 +89,8 @@
 
 <section id="produits"><div class="wrap">
 <h2>Du matériel Aqara, choisi avec soin.</h2>
-<p class="lead">Des équipements fiables, compatibles Zigbee et Home Assistant, sélectionnés pour durer.</p>
-<div class="prods">
-<div class="prod"><div class="pi img" style="background-image:url(images/hub.jpg)" role="img" aria-label="Hub Aqara M400"></div><div class="t"><b>Hub M400</b><small>Aqara</small></div></div>
-<div class="prod"><div class="pi img" style="background-image:url(images/capteur-porte.jpg)" role="img" aria-label="Capteur de porte Aqara"></div><div class="t"><b>Capteur de porte</b><small>Aqara</small></div></div>
-<div class="prod"><div class="pi img" style="background-image:url(images/detecteur-fumee.jpg)" role="img" aria-label="Détecteur de fumée Aqara"></div><div class="t"><b>Détecteur de fumée</b><small>Aqara</small></div></div>
-<div class="prod"><div class="pi img" style="background-image:url(images/serrure.jpg)" role="img" aria-label="Serrure connectée Aqara"></div><div class="t"><b>Serrure connectée</b><small>Aqara</small></div></div>
-</div>
-<p style="margin-top:34px"><a class="btn" href="https://wa.me/237620208747?text=Bonjour%20HomeTech%20Solutions%2C%20je%20souhaite%20commander%20un%20produit.">Demander un produit</a></p>
+<p class="lead">Touchez le + d’un produit pour voir sa description, son prix et le commander.</p>
+<div class="prods" id="pl"></div>
 </div></section>
 
 <section id="methode"><div class="wrap">
@@ -106,6 +117,18 @@
 </div></div></section>
 </main>
 
+<dialog class="pm" id="pm" aria-labelledby="pm-n">
+<button class="close" type="button" id="pm-x" aria-label="Fermer">✕</button>
+<div class="pic img" id="pm-i" role="img" aria-label=""></div>
+<div class="body">
+<small id="pm-c"></small>
+<h3 id="pm-n"></h3>
+<p id="pm-d"></p>
+<div class="price" id="pm-p"></div>
+<div class="acts"><a class="btn g" id="pm-o" href="#">Commander sur WhatsApp</a><button class="btn" type="button" id="pm-f">Fermer</button></div>
+</div>
+</dialog>
+
 <footer><div class="wrap">
 <img class="logo" style="height:34px;opacity:.85" src="images/logo.png" alt="HomeTech Solutions">
 <nav><a href="#domotique">Domotique</a><a href="#electricite">Électricité</a><a href="#produits">Produits</a><a href="#methode">Méthode</a><a href="#contact">Contact</a></nav>
@@ -114,11 +137,23 @@
 <a class="fab" href="https://wa.me/237620208747?text=Bonjour%20HomeTech%20Solutions%2C%20je%20souhaite%20un%20renseignement.">WhatsApp</a>
 
 <script>
+/* ============ LISTE DES PRODUITS : à remplir ============
+   prix : un nombre en FCFA (ex. 45000) ou null pour « Prix sur devis »
+   d    : la description affichée dans la fenêtre
+   img  : la photo (dossier images)                          */
+var PR=[
+{n:"Hub M400",c:"Contrôle",b:"Aqara",d:"Relie et pilote tous les équipements de la maison depuis une seule application.",img:"images/hub.jpg",prix:null},
+{n:"Capteur de porte",c:"Sécurité",b:"Aqara",d:"Détecte l’ouverture d’une porte ou d’une fenêtre et prévient votre téléphone.",img:"images/capteur-porte.jpg",prix:null},
+{n:"Détecteur de fumée",c:"Sécurité",b:"Aqara",d:"Alerte en cas de fumée, même en votre absence.",img:"images/detecteur-fumee.jpg",prix:null},
+{n:"Serrure connectée",c:"Sécurité",b:"Aqara",d:"Entrez sans clé et gérez les accès depuis l’application.",img:"images/serrure.jpg",prix:null}
+];
+
 (function(){
 var o=document.getElementById('ov'),b=document.querySelector('.burger');
 function t(v){o.classList.toggle('open',v);b.setAttribute('aria-expanded',v);document.body.style.overflow=v?'hidden':''}
 b.onclick=function(){t(true)};document.getElementById('x').onclick=function(){t(false)};
 [].forEach.call(o.querySelectorAll('a'),function(a){a.onclick=function(){t(false)}});
+
 var S={a:['Allumé 70 %','Ouverts','Déverrouillée','24 °C'],s:['Ambiance 30 %','Fermés','Verrouillée','25 °C'],n:['Éteint','Fermés','Verrouillée','26 °C']};
 var chips=[].slice.call(document.querySelectorAll('.chip')),touched=false;
 function set(k){chips.forEach(function(c){c.setAttribute('aria-pressed',c.dataset.s===k)});S[k].forEach(function(x,i){document.getElementById('d'+i).textContent=x})}
@@ -128,6 +163,30 @@ setTimeout(function(){if(!touched)set('s')},2600);
 setTimeout(function(){if(!touched)set('n')},5200);
 setTimeout(function(){if(!touched)set('a')},7800);
 }
+
+/* produits + fenêtre */
+var pl=document.getElementById('pl'),dlg=document.getElementById('pm');
+PR.forEach(function(p,i){
+ var d=document.createElement('div');d.className='prod';d.dataset.i=i;
+ d.innerHTML='<div class="pi img" style="background-image:url('+p.img+')"></div><div class="t"><b></b><small></small></div><button class="plus" type="button" aria-label="Voir le produit">+</button>';
+ d.querySelector('b').textContent=p.n;d.querySelector('small').textContent=p.b;
+ d.querySelector('.plus').setAttribute('aria-label','Voir '+p.n);
+ pl.appendChild(d);
+});
+function ouvrir(i){
+ var p=PR[i],prix=p.prix?p.prix.toLocaleString('fr-FR')+' FCFA':'Prix sur devis';
+ var im=document.getElementById('pm-i');im.style.backgroundImage='url('+p.img+')';im.setAttribute('aria-label',p.n);
+ document.getElementById('pm-c').textContent=p.c+' · '+p.b;
+ document.getElementById('pm-n').textContent=p.n;
+ document.getElementById('pm-d').textContent=p.d;
+ document.getElementById('pm-p').textContent=prix;
+ document.getElementById('pm-o').href='https://wa.me/237620208747?text='+encodeURIComponent('Bonjour HomeTech Solutions, je souhaite commander : '+p.n+' ('+prix+')');
+ dlg.showModal();document.body.style.overflow='hidden';
+}
+pl.addEventListener('click',function(e){var c=e.target.closest('.prod');if(c)ouvrir(+c.dataset.i)});
+document.getElementById('pm-x').onclick=document.getElementById('pm-f').onclick=function(){dlg.close()};
+dlg.addEventListener('click',function(e){if(e.target===dlg)dlg.close()});
+dlg.addEventListener('close',function(){document.body.style.overflow=''});
 })();
 </script>
 </body>
